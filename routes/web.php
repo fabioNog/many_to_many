@@ -68,3 +68,19 @@ Route::get('/centraisloja', function () {
     }
 
 });
+
+Route::get('/centraisloja/json', function () {
+    $centrais = Central::with('lojas')->get();
+    return $centrais->toJson();
+});
+
+Route::get('/adicionarloja', function () {
+    $c = Central::find(1);
+    $loja = new Loja();
+    $loja->nome = "Loja Cem";
+    $loja->estoque = 10;
+    $loja->preco = 30000;
+    $loja->central()->associate($c);
+    $loja->save();
+    return $c->toJson();
+});
