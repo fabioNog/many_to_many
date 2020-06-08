@@ -82,5 +82,5 @@ Route::get('/adicionarloja', function () {
     $loja->preco = 30000;
     $loja->central()->associate($c);
     $loja->save();
-    return $c->toJson();
+    return $loja->toJson();
 });
