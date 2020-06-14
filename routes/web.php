@@ -4,35 +4,31 @@ use Illuminate\Support\Facades\Route;
 use App\Loja;
 use App\Central;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+
+//many-to-many
+use App\Desenvolvedor;
+use App\Projeto;
+use App\Alocacao;
+
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/lojascentral', function () {
-    $lojas = Loja::all();
-    if(count($lojas)===0){
+    $dojas = Loja::all();
+    if(count($dojas)===0){
         echo "<h3>Você não possui nenhuma loja cadastrada</h3>";
     }
     else{
         echo "<table>";
         echo "<thead><tr><td>Nome</td><td>Estoque</td><td>Preço</td><td>Central</td></tr></thead>";
-        foreach($lojas as $l){
+        foreach($dojas as $d){
             echo "<tr>";
-            echo "<td>" . $l->nome ."</td>";
-            echo "<td>" . $l->estoque ."</td>";
-            echo "<td>" . $l->preco ."</td>";
-            echo "<td>" . $l->central_id ."</td>";
+            echo "<td>" . $d->nome ."</td>";
+            echo "<td>" . $d->estoque ."</td>";
+            echo "<td>" . $d->preco ."</td>";
+            echo "<td>" . $d->central_id ."</td>";
             echo "</tr>";
         }
     }
@@ -54,13 +50,13 @@ Route::get('/centraisloja', function () {
         // echo "<thead><tr><td>Nome</td><td>Estoque</td><td>Preço</td><td>Central</td></tr></thead>";
         foreach($centrais as $c){
             echo "<p>" . $c->id ."</p>";
-            $ljs = $c->lojas;
-            if(count($ljs)> 0){
+            $djs = $c->lojas;
+            if(count($djs)> 0){
                 echo "<ul>";
-                foreach($ljs as $l){
-                    echo "<li>". $l->nome . "</li> ";
-                    echo "<li>". $l->estoque . "</li> ";
-                    echo "<li>". $l->preco . "</li> ";
+                foreach($djs as $d){
+                    echo "<li>". $d->nome . "</li> ";
+                    echo "<li>". $d->estoque . "</li> ";
+                    echo "<li>". $d->preco . "</li> ";
                 }
                 echo "</ul>";
             }
@@ -76,11 +72,35 @@ Route::get('/centraisloja/json', function () {
 
 Route::get('/adicionarloja', function () {
     $c = Central::find(1);
-    $loja = new Loja();
-    $loja->nome = "Loja PontoMais";
-    $loja->estoque = 15;
-    $loja->preco = 60000;
-    $loja->central()->associate($c);
-    $loja->save();
-    return $loja->toJson();
+    $doja = new Loja();
+    $doja->nome = "Loja PontoMais";
+    $doja->estoque = 15;
+    $doja->preco = 60000;
+    $doja->central()->associate($c);
+    $doja->save();
+    return $doja->toJson();
+});
+
+Route::get('/desenvolvedor_projeto', function () {
+    $dev = Desenvolvedor::with('projetos')->get();
+    // return $dev->toJson()
+    if(count($dev)===0){
+        echo "<h3>Você não possui nenhuma loja cadastrada</h3>";
+    }
+    else{
+        // echo "<table>";
+        // echo "<thead><tr><td>Nome</td><td>Estoque</td><td>Preço</td><td>Central</td></tr></thead>";
+        foreach($dev as $d){
+
+            echo "<p>Nome: " . $d->nome ."</p>";
+            echo "<p> Cargo: " . $d->cargo ."</p>";
+            if(count($d->projetos)>0){
+                foreach($d->projetos as $p){
+                    echo "<p> Projeto" . $p->id . ": ". $p->nome ."</p>";
+                    echo "<p> Horas estimadas: " . $p->estimativa_hora ."</p>";
+                }
+            }
+
+        }
+    }
 });
