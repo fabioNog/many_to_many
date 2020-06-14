@@ -77,9 +77,9 @@ Route::get('/centraisloja/json', function () {
 Route::get('/adicionarloja', function () {
     $c = Central::find(1);
     $loja = new Loja();
-    $loja->nome = "Loja Cem";
-    $loja->estoque = 10;
-    $loja->preco = 30000;
+    $loja->nome = "Loja PontoMais";
+    $loja->estoque = 15;
+    $loja->preco = 60000;
     $loja->central()->associate($c);
     $loja->save();
     return $loja->toJson();
