@@ -95,12 +95,16 @@ Route::get('/desenvolvedor_projeto', function () {
             echo "<p>Nome: " . $d->nome ."</p>";
             echo "<p> Cargo: " . $d->cargo ."</p>";
             if(count($d->projetos)>0){
+                echo "Projetos: <br/>";
+                echo "<ul>";
                 foreach($d->projetos as $p){
-                    echo "<p> Projeto" . $p->id . ": ". $p->nome ."</p>";
-                    echo "<p> Horas estimadas: " . $p->estimativa_hora ."</p>";
+                    echo "<li>";
+                    echo "<p> Nome" . $p->id . ": ". $p->nome . " | " . "Horas: " . $p->estimativa_hora .  "</p>";
+                    echo "</li>";
                 }
+                echo "</ul>";
             }
-
+            echo "<hr/>";
         }
     }
 });
