@@ -99,12 +99,20 @@ Route::get('/desenvolvedor_projeto', function () {
                 echo "<ul>";
                 foreach($d->projetos as $p){
                     echo "<li>";
-                    echo "<p> Nome" . $p->id . ": ". $p->nome . " | " . "Horas: " . $p->estimativa_hora .  "</p>";
+                    echo "<p>Projeto " . $p->id . ": ". $p->nome . " | " . "Horas: " . $p->estimativa_hora . " | " . "Horas Semanais: " . $p->pivot->horas_semanais . "</p>";
                     echo "</li>";
                 }
                 echo "</ul>";
             }
             echo "<hr/>";
         }
+    }
+});
+
+
+Route::get('/alocar', function () {
+    $proj = Projeto::find(4);
+    if(isset($proj)){
+        $proj->desenvolvedores()->attach(1, [ 'horas_semanais' => 45]);
     }
 });
